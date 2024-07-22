@@ -1,0 +1,27 @@
+input{
+    width: 100px;
+    height: 100px;
+    border: none;
+    background-color: #ffffff;
+}
+#left{ 
+    position: absolute;
+    top: 520px;
+    left: 40px;
+}
+#back{
+    position: absolute;
+    top: 520px;
+    left: 150px;
+}
+
+#go{
+    position: absolute;
+    top: 410px;
+    left: 150px;
+}
+#right{
+    position: absolute;
+    top: 520px;
+    left: 260px;
+}

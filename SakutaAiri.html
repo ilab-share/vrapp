@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>A-Frame Selectable Object with jQuery</title>
+  <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <a-entity id="ctlR" laser-controls="hand: right" raycaster="lineColor: red;"></a-entity> 
+</head>
+<body>
+  <!-- A-Frameシーン -->
+  <a-scene cursor="rayOrigin: mouse">
+    <!-- スタートボタン -->
+    <a-box id="start-box" position="0 2 -3" width="2" height="0.5" depth="0.1" color="#4CC3D9" class="start-box clickable">
+      <!-- スタートボタンのテキスト -->
+      <a-text text="スタート" align="center" position="0 0 0.05" color="#000"></a-text>
+    </a-box>
+
+    <!-- ゲームエリア -->
+    <a-entity id="game-area" position="0 0 -3">
+      <!-- 3つのボックス -->
+      <a-box id="box1" position="-1.5 1 0" rotation="0 0 0" color="#4CC3D9" class="clickable"></a-box>
+      <a-box id="box2" position="0 1 0" rotation="0 0 0" color="#4CC3D9" class="clickable"></a-box>
+      <a-box id="box3" position="1.5 1 0" rotation="0 0 0" color="#4CC3D9" class="clickable"></a-box>
+    </a-entity>
+  </a-scene>
+
+  <script>
+    $(document).ready(function() {
+      var redBoxIndex; 
+      var redClickCount = 0; 
+      var gameStarted = false; 
+      var timerDuration = 10 * 1000; 
+      var timerId;
+
+      // タイマーが終了した際に実行する処理
+      function timerFinished() {
+        alert('10秒間で ' + redClickCount + ' 回赤いボックスをクリックしました！');
+        resetGame();
+      }
+
+      // タイマーを開始する関数
+      function startTimer() {
+        timerId = setInterval(randomizeRedBox, 1000);
+        setTimeout(function() {
+          clearInterval(timerId); 
+          timerFinished(); 
+        }, timerDuration);
+      }
+
+      // スタートボタンのクリックイベントリスナー
+      $('.start-box').on('click', function() {
+        startGame();
+      });
+
+      // ボックスクリック
+      $('.clickable').on('click', function() {
+        // ゲームがスタートしていない場合は何もしない
+        if (!gameStarted) return;
+
+        // クリックされたボックスが赤いかどうかをチェック
+        if ($(this).attr('id') === 'box' + (redBoxIndex + 1)) {
+          // 赤いボックスがクリックされた場合
+          redClickCount++;
+          console.log('赤いボックスをクリックしました！現在のカウント: ' + redClickCount);
+          randomizeRedBox(); // 赤いボックスを再度ランダムに設定する
+        }
+      });
+
+      // ボックスをランダムに赤くする関数
+      function randomizeRedBox() {
+      
+        $('.clickable').attr('color', '#4CC3D9');
+       
+        redBoxIndex = Math.floor(Math.random() * 3); 
+        $('#box' + (redBoxIndex + 1)).attr('color', '#FF0000');
+      }
+
+      // ゲームを開始する関数
+      function startGame() {
+        gameStarted = true;
+      
+        $('#start-box').attr('visible', 'false');
+
+        $('.clickable').css('cursor', 'pointer');
+
+        startTimer();
+
+        randomizeRedBox();
+      }
+
+      // ゲームをリセットする関数
+      function resetGame() {
+        gameStarted = false;
+        redClickCount = 0;
+        $('#start-box').attr('visible', 'true');
+        $('.clickable').attr('color', '#4CC3D9');
+        clearInterval(timerId); // タイマーをクリアする
+      }
+    });
+  </script>
+</body>
+</html>
