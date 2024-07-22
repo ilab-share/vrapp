@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+<title>VR 的当てゲーム</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 0;
+        overflow: hidden; /* A-FrameではoverflowをhiddenにすることでVR表示を正しく扱える場合がある */
+    }
+    #game-container {
+        position: relative;
+        width: 800px;
+        height: 500px;
+        margin: 20px auto;
+        border: 2px solid #000;
+        perspective: 800px;
+    }
+</style>
+</head>
+<body>
+
+<a-scene cursor="rayOrigin: mouse">
+    <a-entity id="ctlR" laser-controls="hand: right" raycaster="lineColor: red;"></a-entity> 
+    <!-- VR 的当てゲームのタイトル -->
+    <a-text value="VR GAME" color="black" position="-2 2 -5" scale="2 2 2"></a-text>
+
+    <!-- スコア表示 -->
+    <a-text id="score" value="score: 0" color="black" position="-2 1.5 -5" scale="1.5 1.5 1.5"></a-text>
+
+    <!-- VR 空間の背景 -->
+    <a-sky color="white"></a-sky>
+
+    <!-- ボール -->
+    <a-sphere id="ball" position="0 0 -3" radius="0.5" color="red" cursor-listener></a-sphere>
+</a-scene>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const scoreElement = document.getElementById('score');
+
+    let score = 0;
+    let speed = 0.1;
+    let gameInterval;
+    let clickable = true;
+
+    function moveBall() {
+        const newX = (Math.random() - 0.5) * 8; // 幅の範囲 (-4 ～ 4)
+        const newY = (Math.random() - 0.5) * 6; // 高さの範囲 (-3 ～ 3)
+        
+        const ball = document.getElementById('ball');
+        ball.setAttribute('position', `${newX} ${newY} -3`);
+    }
+
+    function increaseScore() {
+        if (!clickable) return;
+
+        score += 20;
+        scoreElement.setAttribute('value', `score: ${score}`);
+        clickable = false;
+
+        if (score >= 100) {
+            endGame();
+        } else {
+            speed += 0.2;
+            clearInterval(gameInterval);
+            gameInterval = setInterval(moveBall, 500 / speed);
+
+            setTimeout(function() {
+                clickable = true;
+            }, 2000);
+        }
+    }
+
+    function endGame() {
+        clearInterval(gameInterval);
+        alert('ゲーム終了！ スコア: ' + score);
+    }
+
+    // ボールがクリックされた時の処理
+    document.getElementById('ball').addEventListener('click', function() {
+        increaseScore();
+    });
+
+    // 最初のボールの配置とゲームの開始
+    moveBall();
+    gameInterval = setInterval(moveBall, 500 / speed);
+});
+</script>
+
+</body>
+</html>
