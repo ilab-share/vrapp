@@ -79,15 +79,12 @@
   </script>
 
   <body>
-    <a-scene background="color: #FAFAFA">
+    <a-scene cursor="rayOrigin: mouse" background="color: #FAFAFA">
     　<a-entity id="ctlR" laser-controls="hand: right" raycaster="lineColor: red;"></a-entity>
       <a-assets>
         <audio id="click-sound" src="click-sound.mp3"></audio> <!-- クリック音の音声ファイル -->
       </a-assets>
-      <a-entity camera look-controls>
-        <a-cursor></a-cursor>
-        <a-entity cursor="rayOrigin: mouse"></a-entity>
-      </a-entity>
+
       <a-box kesu position="0 0 -3" color="#FF9500">
         <a-text value="start" align="center" position="0 0 0.3" color="#000"></a-text>
       </a-box>
