@@ -44,7 +44,7 @@ function pushed(id) {
 
         if (checkWin()) {
             winSound.play();
-            alert("クリア！");
+            //alert("クリア！");
         }
     }
 }
